@@ -9,6 +9,6 @@ const fetch = (key) => (resource) => (skip) =>
     headers: {'AccountKey': key}
   }))
     .map(({ data }) => data)
-    .map(({ value }) => value)
+    .map(({ value }) => ({ data: value, skip }))
 
 module.exports = fetch
