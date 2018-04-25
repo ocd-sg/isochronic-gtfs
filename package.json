@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node --max-old-space-size=8192 index.js",
+    "test": "ava ./**/*test.js --verbose",
+    "test:watch": "npm run test -- --watch"
   },
   "keywords": [],
   "author": "",
@@ -12,7 +14,11 @@
   "dependencies": {
     "axios": "^0.18.0",
     "d3-dsv": "^1.0.8",
+    "lodash": "^4.17.10",
     "ora": "^2.0.0",
     "rxjs": "^5.5.10"
+  },
+  "devDependencies": {
+    "ava": "^0.25.0"
   }
 }
