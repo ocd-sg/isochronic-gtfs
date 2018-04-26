@@ -9,7 +9,7 @@ const fetch = require('./utils/fetch')(
 
 const RESOURCES = ['BusServices', 'BusStops', 'BusRoutes']
 const INTERVAL = 500
-const SKIP = 50
+const SKIP = 500
 
 const createStream = (resource) => {
   const _fetch = fetch(resource)
@@ -21,13 +21,11 @@ const createStream = (resource) => {
     .expand(({ skip }) => _fetch(skip + SKIP))
     .delay(INTERVAL)
     .takeWhile(({ data }) => data && data.length)
-    .scan((memo, { data }) => [ ...memo, ...data ], [])
-
-  const spinner$ = source$
+    .reduce((memo, { data }) => [ ...memo, ...data ], [])
     .do((d) => { spinner.text = `${title}: ${d.length}` })
     .finally(() => spinner.succeed())
 
-  return spinner$
+  return source$
 }
 
 const fetch$ = Observable.from(RESOURCES)
