@@ -1,10 +1,10 @@
 const fs = require('fs')
-const path = require('path')
+const { resolve } = require('path')
 const { Observable } = require('rxjs')
 const ora = require('ora')
 const createLabel = require('./utils/createLabel')
 const fetch = require('./utils/fetch')(
-  fs.readFileSync('./config/mytransport.key').toString().trim()
+  fs.readFileSync(resolve(__dirname, '../../../config/mytransport.key'), 'utf8').trim()
 )
 
 const RESOURCES = ['BusServices', 'BusStops', 'BusRoutes']
@@ -22,7 +22,6 @@ const createStream = (resource) => {
     .delay(INTERVAL)
     .takeWhile(({ data }) => data && data.length)
     .scan((memo, { data }) => [ ...memo, ...data ], [])
-    .takeWhile((d) => d.length < 1000)
 
   const spinner$ = source$
     .do((d) => { spinner.text = `${title}: ${d.length}` })
