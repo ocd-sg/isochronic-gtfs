@@ -29,7 +29,6 @@ const trips$ = services$
   )
   .concatMap((trips) =>
     Observable.from(trips)
-      .filter(({ stop, terminal }) => stop.id !== terminal.id)
       .do((trip) => { spinner.text = `${title}: fetching ${trip.id}, ${[trip.stop.id, trip.terminal.id].join('-')} ${[trip.stop.ref, trip.terminal.ref].join('-')}` })
       .concatMap((trip) =>
         Observable.fromPromise(

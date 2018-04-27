@@ -10,13 +10,13 @@ const transform = ({
   headway_secs
 })
 
-const stringToMinutes = (str) => {
+const _stringToMinutes = (str) => {
   const h = +str.slice(0, 2)
   const m = +str.slice(2, 4)
   return (h < 3 ? h + 24 : h) * 60 + m
 }
 
-const minutesToString = (minutes) => {
+const _minutesToCompositeString = (minutes) => {
   const h = ~~(minutes / 60)
   const m = minutes % 60
   const hStr = h < 10 ? `0${h}` : `${h}`
@@ -29,8 +29,8 @@ const formatFrequencies = (trips) =>
     .filter(({ sequence }) => sequence === 0)
     .map((trip) => {
       const { terminal } = trip
-      const first = stringToMinutes(trip.times.arrivals.find((d) => d.terminal === terminal.name && d.type === 'FIRST_TRAIN' && d.day === 'WEEKDAYS').time)
-      const last = stringToMinutes(trip.times.arrivals.find((d) => d.terminal === terminal.name && d.type === 'LAST_TRAIN' && d.day === 'WEEKDAYS').time)
+      const first = _stringToMinutes(trip.times.arrivals.find((d) => d.terminal === terminal.name && d.type === 'FIRST_TRAIN' && d.day === 'WEEKDAYS').time)
+      const last = _stringToMinutes(trip.times.arrivals.find((d) => d.terminal === terminal.name && d.type === 'LAST_TRAIN' && d.day === 'WEEKDAYS').time)
       const peaks = trip.times.peaks.filter(({ day }) => day === 'WEEKDAYS')
       const frequencies = trip.times.frequencies.filter(({ day }) => day === 'WEEKDAYS')
 
@@ -38,29 +38,29 @@ const formatFrequencies = (trips) =>
       let i = first
 
       while (i < last) {
-        const firstPeakTime = peaks.length ? stringToMinutes(peaks[0].time[0]) : 0
+        const firstPeakTime = peaks.length ? _stringToMinutes(peaks[0].time[0]) : 0
         if (i < firstPeakTime) {
           const peak = peaks.shift()
           periods.push({
             type: 'OFF-PEAK',
             start: i,
-            end: stringToMinutes(peak.time[0])
+            end: _stringToMinutes(peak.time[0])
           })
           periods.push({
             type: 'PEAK',
-            start: stringToMinutes(peak.time[0]),
-            end: stringToMinutes(peak.time[1])
+            start: _stringToMinutes(peak.time[0]),
+            end: _stringToMinutes(peak.time[1])
           })
-          i = stringToMinutes(peak.time[1])
+          i = _stringToMinutes(peak.time[1])
         }
         else if (i >= firstPeakTime && firstPeakTime !== 0) {
           const peak = peaks.shift()
           periods.push({
             type: 'PEAK',
-            start: stringToMinutes(peak.time[0]),
-            end: stringToMinutes(peak.time[1])
+            start: _stringToMinutes(peak.time[0]),
+            end: _stringToMinutes(peak.time[1])
           })
-          i = stringToMinutes(peak.time[1])
+          i = _stringToMinutes(peak.time[1])
         }
 
 
@@ -77,8 +77,8 @@ const formatFrequencies = (trips) =>
       periods = periods
         .map(({ type, start, end }) => ({
           id: trip.id,
-          start: minutesToString(start),
-          end: minutesToString(end),
+          start: _minutesToCompositeString(start),
+          end: _minutesToCompositeString(end),
           headway: frequencies.find((d) => d.type === type).frequency * 60
         }))
 

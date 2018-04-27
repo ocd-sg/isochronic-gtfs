@@ -1,0 +1,7 @@
+route_id,route_short_name,route_long_name,route_type
+SE,SE,,0
+SW,SW,,0
+PE,PE,,0
+PW,PW,,0
+BP,BP,,0
+BP-C,BP-C,,0

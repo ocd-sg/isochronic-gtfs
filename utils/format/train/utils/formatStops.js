@@ -1,5 +1,5 @@
 const transform = ({
-  ref: stop_id,
+  id: stop_id,
   name: stop_name,
   lat: stop_lat,
   lon: stop_lon

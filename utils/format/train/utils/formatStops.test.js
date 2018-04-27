@@ -14,7 +14,7 @@ test('format: stops.txt', (t) => {
   ]
   const expected = [
     {
-      stop_id: 'DT1',
+      stop_id: 53,
       stop_name: 'Bukit Panjang',
       stop_lat: 1.378629,
       stop_lon: 103.7621358
@@ -38,7 +38,7 @@ test('format: handles inverted lat/lon data points', (t) => {
   ]
   const expected = [
     {
-      stop_id: 'DT1',
+      stop_id: 53,
       stop_name: 'Bukit Panjang',
       stop_lat: 1.378629,
       stop_lon: 103.7621358
