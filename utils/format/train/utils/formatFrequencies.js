@@ -11,9 +11,9 @@ const transform = ({
 })
 
 const stringToMinutes = (str) => {
-  const h = +(str[0] + str[1])
-  const m = +(str[2] + str[3])
-  return (h === 0 ? 24 : h) * 60 + m
+  const h = +str.slice(0, 2)
+  const m = +str.slice(2, 4)
+  return (h < 3 ? h + 24 : h) * 60 + m
 }
 
 const minutesToString = (minutes) => {
@@ -29,8 +29,8 @@ const formatFrequencies = (trips) =>
     .filter(({ sequence }) => sequence === 0)
     .map((trip) => {
       const { terminal } = trip
-      const first = stringToMinutes(trip.times.arrivals.find((d) => d.terminal === terminal.name && d.type === 'FIRST_TRAIN').time)
-      const last = stringToMinutes(trip.times.arrivals.find((d) => d.terminal === terminal.name && d.type === 'LAST_TRAIN').time)
+      const first = stringToMinutes(trip.times.arrivals.find((d) => d.terminal === terminal.name && d.type === 'FIRST_TRAIN' && d.day === 'WEEKDAYS').time)
+      const last = stringToMinutes(trip.times.arrivals.find((d) => d.terminal === terminal.name && d.type === 'LAST_TRAIN' && d.day === 'WEEKDAYS').time)
       const peaks = trip.times.peaks.filter(({ day }) => day === 'WEEKDAYS')
       const frequencies = trip.times.frequencies.filter(({ day }) => day === 'WEEKDAYS')
 
@@ -53,6 +53,16 @@ const formatFrequencies = (trips) =>
           })
           i = stringToMinutes(peak.time[1])
         }
+        else if (i >= firstPeakTime && firstPeakTime !== 0) {
+          const peak = peaks.shift()
+          periods.push({
+            type: 'PEAK',
+            start: stringToMinutes(peak.time[0]),
+            end: stringToMinutes(peak.time[1])
+          })
+          i = stringToMinutes(peak.time[1])
+        }
+
 
         if (peaks.length === 0) {
           periods.push({
