@@ -11,7 +11,7 @@ const services$ = stops$
   .do(() => spinner.start())
   .do(() => { spinner.text = `title: parsing train services` })
   .map(parseServices(lines))
-  .do(() => { spinner.text = title })
+  .do((services) => { spinner.text = `${title}: ${services.length}` })
   .finally(() => spinner.succeed())
 
 module.exports = () => services$

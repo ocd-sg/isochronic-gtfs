@@ -13,7 +13,7 @@ const formatBus = ({ services, stops, routes }) => {
       stops: formatStops(stops),
       routes: formatRoutes(routes),
       trips: formatTrips(services),
-      'stop_times': formatStopTimes(routes),
+      'stop_times': formatStopTimes(stops)(routes),
       frequencies: formatFrequencies(services)
     })
     .delay(1000)

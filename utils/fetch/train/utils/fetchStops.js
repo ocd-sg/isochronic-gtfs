@@ -64,18 +64,20 @@ const source$ = Observable.of(null)
         if (missing.length) spinner.info(`train stops without coordinates: ${missing.join(', ')}`)
       })
       .map((features) =>
-        features.map((feature) => ({
-          id: stops.find(({ codes }) => codes.filter((id) => feature.properties.refs.includes(id)).length).id,
-          ref: feature.properties.ref,
-          refs: feature.properties.refs,
-          name: feature.properties.name,
-          lat: feature.geometry.coordinates[1],
-          lon: feature.geometry.coordinates[0]
-        }))
+        features
+          .map((feature) => ({
+            id: stops.find(({ codes }) => codes.filter((id) => feature.properties.refs.includes(id)).length).id,
+            ref: feature.properties.ref,
+            refs: feature.properties.refs,
+            name: feature.properties.name,
+            lat: feature.geometry.coordinates[1],
+            lon: feature.geometry.coordinates[0]
+          }))
       )
   )
-  .do(() => { spinner.text = title })
+  .do((stops) => { spinner.text = `${title}: ${stops.length}` })
   .finally(() => spinner.succeed())
-  .share()
+  .publishReplay(1)
+  .refCount()
 
 module.exports = () => source$

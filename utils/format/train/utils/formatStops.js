@@ -11,6 +11,8 @@ const transform = ({
 })
 
 const formatStops = (stops) =>
-  stops.map(transform)
+  stops
+    .map(transform)
+    .reduce((memo, d) => memo.find(({ stop_id }) => d.stop_id === stop_id) ? memo : [ ...memo, d ], [])
 
 module.exports = formatStops

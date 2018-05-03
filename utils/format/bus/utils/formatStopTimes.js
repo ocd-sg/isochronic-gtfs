@@ -34,7 +34,7 @@ const _minutesToComposite = (_minutes) => {
   return `${hours < 10 ? '0' + hours : hours}:${minutes < 10 ? '0' + minutes : minutes}:00`
 }
 
-const formatStopTimes = (routes) =>
+const formatStopTimes = (stops) => (routes) =>
   routes
     .map((d) => Object.assign({}, d, {
       Direction: d.Direction === 1 ? 0 : 1,
@@ -78,7 +78,7 @@ const formatStopTimes = (routes) =>
             }
           }
           return Object.assign({}, curr, {
-            Delta: delta,
+            Delta: delta || 1,
             Minutes: _stringToMinutes(curr.WD_FirstBus)
           })
         })
@@ -100,6 +100,7 @@ const formatStopTimes = (routes) =>
       return value
     })
     .reduce((memo, d) => memo.concat(d), [])
+    .filter((d) => stops.map(({ BusStopCode }) => BusStopCode).includes(d.BusStopCode))
     .map(format)
 
 module.exports = formatStopTimes

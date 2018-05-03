@@ -45,7 +45,7 @@ const trips$ = services$
       )
   )
   .reduce((memo, trip) => [ ...memo, trip ], [])
-  .do(() => { spinner.text = title })
+  .do((trips) => { spinner.text = `${title}: ${trips.length}` })
   .finally(() => spinner.succeed())
 
 module.exports = () => trips$
